@@ -5,6 +5,7 @@ import ARPage from './pages/ARPage';  // Import the AR page
 import AboutPage from './pages/About';
 import HealthWellness from './components/HealthWellness';
 import './styles/global.css';
+import HerbList from './components/HerbList';
 
 const App = () => {
   return (
