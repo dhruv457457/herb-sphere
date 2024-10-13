@@ -20,7 +20,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center justify-center md:justify-start mb-4">
             <i className="fa-solid fa-envelope text-main-color text-2xl mr-4"></i>
-            <p className="text-lg">batadena.konsa.dalna.hai@gmail.com</p>
+            <p className="text-lg">ayurherb@gmail.com</p>
           </div>
         </div>
 
