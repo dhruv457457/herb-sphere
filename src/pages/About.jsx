@@ -1,52 +1,65 @@
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import React, { useState, useEffect } from "react";
+import PlantCard from "../components/PlantCard";
+import { fetchPlants } from "../services/api"; // Import the fetchPlants function
 
-const AboutPage = () => {
-  const [showMission, setShowMission] = useState(false);
-  const [showTeam, setShowTeam] = useState(false);
+const Home = () => {
+  const [plants, setPlants] = useState([]); // State to hold plant data
+  const [loading, setLoading] = useState(true); // State to manage loading status
+  const [error, setError] = useState(null); // State to hold any errors
 
+  // Fetch plants data on component mount
+  useEffect(() => {
+    const getPlants = async () => {
+      try {
+        const response = await fetchPlants(); // Fetch data from the API
+        console.log(response); // Log the response data to the console
+        setPlants(response.data); // Correctly set plant data to state
+      } catch (err) {
+        console.error("Error fetching plants:", err); // Log the error for debugging
+        setError("Failed to fetch plants"); // Set error if the fetch fails
+      } finally {
+        setLoading(false); // Set loading to false
+      }
+    };
+
+    getPlants(); // Call the async function
+  }, []);
+
+  // Render loading state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // Render error state
+  if (error) {
+    return <div>{error}</div>;
+  }
+  
+  console.log("Rendered plants:", plants); // Check the state before rendering
+
+  // Render the list of PlantCards
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-100 pt-20">
-        {/* Mission Section */}
-        <section className="py-12">
-          <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-6">Our Mission</h2>
-            <button
-              onClick={() => setShowMission(!showMission)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-200"
-            >
-              {showMission ? 'Hide Mission' : 'Show Mission'}
-            </button>
-            {showMission && (
-              <p className="text-gray-600 mt-4 mx-auto w-11/12 md:w-2/5">
-                Our mission is to digitize the rich heritage of herbal knowledge, offering users a virtual garden where they
-                can explore plants, learn about their medicinal uses, and experience augmented reality (AR) functionalities
-                to visualize plants in their environment.
-              </p>
-            )}
-          </div>
-        </section>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
+  {plants.map((plant) => (
+    <PlantCard
+      key={plant._id} // Use a unique key from the plant object
+      imageSrc={plant.imageSrc || "default-image-url"} // Ensure imageSrc is handled correctly
+      name={plant.name || "Unknown Plant"}
+      type={plant.type || "Unknown Type"}
+      onBookmarkToggle={() => {
+        /* Bookmark toggle logic here */
+      }}
+      isBookmarked={false} // Adjust based on your bookmarking logic
+      onLearnMore={() => {
+        /* Logic to learn more about the plant */
+      }}
+      // Add custom Tailwind CSS classes for the PlantCard component
+      className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105"
+    />
+  ))}
+</div>
 
-        {/* Contact Section */}
-        <section className="bg-white py-12 shadow-lg">
-          <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-6">Get in Touch</h2>
-            <p className="text-gray-600">
-              If you have any questions or want to collaborate with us, feel free to contact us.
-            </p>
-            <a
-              href="#contact"
-              className="mt-4 inline-block bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors duration-200"
-            >
-              Contact Us
-            </a>
-          </div>
-        </section>
-      </div>
-    </>
   );
 };
 
-export default AboutPage;
+export default Home;
