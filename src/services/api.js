@@ -8,7 +8,7 @@ export const fetchPlants = async () => {
         'ProjectID': '670b8f9459c9b368f802b506',
       },
       params: {
-        limit: 13,
+        limit: 12,
         offset: 0,
       },
     });

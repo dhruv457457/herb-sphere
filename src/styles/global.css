@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+/* Custom Scrollbar Styles */
 /* Custom Scrollbar Styles */
 @layer utilities {
   /* For entire document scrollbar */
@@ -22,20 +25,12 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #555; /* Color of the scrollbar thumb on hover */
+    background: #555; /* Color of the scrollbar thumb on hover */
   }
 
-  /* Apply the custom scrollbar styles globally */
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px; /* Slightly thinner scrollbar */
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #1977CC; /* Main color for the scrollbar thumb */
-    border-radius: 10px;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: #145ea8; /* Darker color on hover */
+  /* Specific to the popup */
+  .custom-scrollbar {
+    max-height: 80vh; /* Adjust based on your layout */
+    overflow-y: auto; /* Enable vertical scrolling */
   }
 }
