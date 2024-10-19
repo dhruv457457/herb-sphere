@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { auth } from '../services/firebase';
-import { signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import { auth } from "../services/firebase";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import {
   FaLeaf,
   FaSearch,
@@ -14,15 +14,15 @@ import {
   FaSun,
   FaChevronRight,
   FaHome,
-} from 'react-icons/fa';
-import { Line, Doughnut } from 'react-chartjs-2';
-import 'react-toastify/dist/ReactToastify.css';
-import Chart from 'chart.js/auto';
-import { Link } from 'react-router-dom';
+} from "react-icons/fa";
+import { Line, Doughnut } from "react-chartjs-2";
+import "react-toastify/dist/ReactToastify.css";
+import Chart from "chart.js/auto";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState('User');
+  const [userName, setUserName] = useState("User");
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [progress, setProgress] = useState(60);
@@ -31,31 +31,31 @@ const Dashboard = () => {
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      setUserName(currentUser.displayName || 'User');
+      setUserName(currentUser.displayName || "User");
     }
   }, []);
 
   const handleLogout = async () => {
     await signOut(auth);
-    toast.success('You have successfully logged out!', {
+    toast.success("You have successfully logged out!", {
       position: toast.POSITION.TOP_CENTER,
     });
-    navigate('/login');
+    navigate("/login");
   };
 
   const handleCardClick = (action) => {
     switch (action) {
-      case 'View My Herbs':
-        navigate('/my-herbs');
+      case "View My Herbs":
+        navigate("/my-herbs");
         break;
-      case 'Explore New Herbs':
-        navigate('/');
+      case "Explore New Herbs":
+        navigate("/");
         break;
-      case 'Gardening Tips':
-        navigate('/health-wellness');
+      case "Gardening Tips":
+        navigate("/health-wellness");
         break;
-      case 'Community Forum':
-        navigate('/community-forum');
+      case "Community Forum":
+        navigate("/community-forum");
         break;
       default:
         break;
@@ -64,7 +64,7 @@ const Dashboard = () => {
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    document.documentElement.classList.toggle('dark');
+    document.documentElement.classList.toggle("dark");
   };
 
   const toggleSidebar = () => {
@@ -73,49 +73,77 @@ const Dashboard = () => {
 
   const toggleExpandedPost = (postId) => {
     setExpandedPost(expandedPost === postId ? null : postId);
-    toast.info(`You ${expandedPost === postId ? 'collapsed' : 'expanded'} a post.`);
+    toast.info(
+      `You ${expandedPost === postId ? "collapsed" : "expanded"} a post.`
+    );
   };
 
   const lineChartData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
-        label: 'Herb Growth Over Months',
+        label: "Herb Growth Over Months",
         data: [12, 19, 7, 15, 22, 30],
         fill: false,
-        backgroundColor: 'rgba(75,192,192,0.6)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.6)",
+        borderColor: "rgba(75,192,192,1)",
         tension: 0.4,
       },
     ],
   };
 
   const progressData = {
-    labels: ['Completed', 'Remaining'],
+    labels: ["Completed", "Remaining"],
     datasets: [
       {
-        label: 'Goal Progress',
+        label: "Goal Progress",
         data: [progress, 100 - progress],
-        backgroundColor: ['#34D399', '#D1D5DB'],
+        backgroundColor: ["#34D399", "#D1D5DB"],
         hoverOffset: 4,
       },
     ],
   };
 
   return (
-    <div className={`flex min-h-screen transition-colors duration-700 ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-b from-green-50 to-green-100'}`}>
-      <div className={`fixed inset-y-0 left-0 ${sidebarCollapsed ? 'w-20' : 'w-64'} bg-gradient-to-t from-green-900 to-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md bg-opacity-30`}>
+    <div
+      className={`flex min-h-screen transition-colors duration-700 ${
+        darkMode ? "bg-gray-900" : "bg-gradient-to-b from-green-50 to-green-100"
+      }`}
+    >
+      <div
+        className={`fixed inset-y-0 left-0 ${
+          sidebarCollapsed ? "w-20" : "w-64"
+        } bg-gradient-to-t from-green-900 to-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md bg-opacity-30`}
+      >
         <div>
           <div className="flex items-center justify-between">
-            <h2 className={`text-3xl font-bold ${sidebarCollapsed ? 'hidden' : 'block'} transition-all duration-500`}>Ayurherb</h2>
-
+            <h2
+              className={`text-3xl font-bold ${
+                sidebarCollapsed ? "hidden" : "block"
+              } transition-all duration-500`}
+            >
+              Ayurherb
+            </h2>
           </div>
           <nav className="mt-8 flex flex-col space-y-4">
-            {[{ label: 'Home', icon: <FaHome />, action: 'Home' },
-            { label: 'My Herbs', icon: <FaLeaf />, action: 'View My Herbs' },
-            { label: 'Explore Herbs', icon: <FaSearch />, action: 'Explore New Herbs' },
-            { label: 'Gardening Tips', icon: <FaSeedling />, action: 'Gardening Tips' },
-            { label: 'Community Forum', icon: <FaComments />, action: 'Community Forum' },
+            {[
+              { label: "Home", icon: <FaHome />, action: "Home" },
+              { label: "My Herbs", icon: <FaLeaf />, action: "View My Herbs" },
+              {
+                label: "Explore Herbs",
+                icon: <FaSearch />,
+                action: "Explore New Herbs",
+              },
+              {
+                label: "Gardening Tips",
+                icon: <FaSeedling />,
+                action: "Gardening Tips",
+              },
+              {
+                label: "Community Forum",
+                icon: <FaComments />,
+                action: "Community Forum",
+              },
             ].map((item, idx) => (
               <button
                 key={idx}
@@ -123,32 +151,63 @@ const Dashboard = () => {
                 className="flex items-center space-x-3 hover:bg-sub-color hover:bg-opacity-60 p-2 rounded-lg transition-all duration-300"
               >
                 <span className="text-xl">{item.icon}</span>
-                <span className={`text-lg ${sidebarCollapsed ? 'hidden' : 'block'}`}>{item.label}</span>
+                <span
+                  className={`text-lg ${sidebarCollapsed ? "hidden" : "block"}`}
+                >
+                  {item.label}
+                </span>
               </button>
             ))}
           </nav>
         </div>
         <div>
-          <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 w-full py-2 rounded shadow-md">Logout</button>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 w-full py-2 rounded shadow-md"
+          >
+            Logout
+          </button>
         </div>
       </div>
 
       <main className="flex-1 p-6 ml-20 sm:ml-64 bg-sec-color">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-main-color">Welcome, {userName}!</h1>
+          <h1 className="text-3xl font-bold text-main-color">
+            Welcome, {userName}!
+          </h1>
           <div>
             <i class="fa-solid fa-address-card text-3xl text-main-color"></i>
-            <Link to="/gardening-tips" className="text-green-700 hover:text-green-900">
+            <Link
+              to="/gardening-tips"
+              className="text-green-700 hover:text-green-900"
+            >
               Go to Gardening Tips
             </Link>
           </div>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[{ title: 'View My Herbs', icon: <FaLeaf />, desc: 'Check out your saved herbs and their details.' },
-          { title: 'Explore New Herbs', icon: <FaSearch />, desc: 'Discover new herbs and their benefits.' },
-          { title: 'Gardening Tips', icon: <FaSeedling />, desc: 'Learn tips and tricks for herb gardening.' },
-          { title: 'Community Forum', icon: <FaComments />, desc: 'Join discussions with fellow herb enthusiasts.' },
+          {[
+            {
+              title: "View My Herbs",
+              icon: <FaLeaf />,
+              desc: "Check out your saved herbs and their details.",
+            },
+            {
+              title: "Explore New Herbs",
+              icon: <FaSearch />,
+              desc: "Discover new herbs and their benefits.",
+            },
+            {
+              title: "Gardening Tips",
+              icon: <FaSeedling />,
+              desc: "Learn tips and tricks for herb gardening.",
+            },
+            {
+              title: "Community Forum",
+              icon: <FaComments />,
+              desc: "Join discussions with fellow herb enthusiasts.",
+            },
           ].map((card, idx) => (
             <div
               key={idx}
@@ -156,20 +215,32 @@ const Dashboard = () => {
               className="bg-green-200 bg-opacity-80 backdrop-blur-lg p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-transform transform hover:scale-105 hover:bg-opacity-100"
             >
               <div className="text-5xl mb-4 text-green-900">{card.icon}</div>
-              <h3 className="text-xl font-semibold mb-2 text-main-color">{card.title}</h3>
+              <h3 className="text-xl font-semibold mb-2 text-main-color">
+                {card.title}
+              </h3>
               <p className="text-gray-500">{card.desc}</p>
             </div>
           ))}
         </div>
 
         <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-main-color">Your Progress</h2>
+          <h2 className="text-2xl font-bold mb-4 text-main-color">
+            Your Progress
+          </h2>
           <div className="flex justify-center">
-            <div style={{ width: '300px', height: '300px' }}>
-              <Doughnut data={progressData} options={{ responsive: true, animation: { animateScale: true } }} />
+            <div style={{ width: "300px", height: "300px" }}>
+              <Doughnut
+                data={progressData}
+                options={{
+                  responsive: true,
+                  animation: { animateScale: true },
+                }}
+              />
             </div>
           </div>
-          <p className="mt-4 text-center text-main-color">{progress}% of your weekly goal achieved!</p>
+          <p className="mt-4 text-center text-main-color">
+            {progress}% of your weekly goal achieved!
+          </p>
           <input
             type="range"
             min="0"
@@ -181,31 +252,60 @@ const Dashboard = () => {
         </section>
 
         <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-main-color">Interactive Statistics</h2>
-          <Line data={lineChartData} options={{ responsive: true, animation: { duration: 2000, easing: 'easeInOutQuad' } }} />
+          <h2 className="text-2xl font-bold mb-4 text-main-color">
+            Interactive Statistics
+          </h2>
+          <Line
+            data={lineChartData}
+            options={{
+              responsive: true,
+              animation: { duration: 2000, easing: "easeInOutQuad" },
+            }}
+          />
         </section>
 
         <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-main-color">Community Forum</h2>
+          <h2 className="text-2xl font-bold mb-4 text-main-color">
+            Community Forum
+          </h2>
           <div className="flex flex-col space-y-4">
-            {[{ id: 1, title: 'How to grow basil indoors?', user: 'JohnDoe', replies: 5, details: 'Basil is an herb that loves warmth and sunlight...' },
-            { id: 2, title: 'Best soil for herb gardens?', user: 'GreenThumb', replies: 3, details: 'For herb gardening, well-drained soil is crucial...' },
+            {[
+              {
+                id: 1,
+                title: "How to grow basil indoors?",
+                user: "JohnDoe",
+                replies: 5,
+                details: "Basil is an herb that loves warmth and sunlight...",
+              },
+              {
+                id: 2,
+                title: "Best soil for herb gardens?",
+                user: "GreenThumb",
+                replies: 3,
+                details: "For herb gardening, well-drained soil is crucial...",
+              },
             ].map((post) => (
               <div
                 key={post.id}
                 className="p-4 bg-white rounded-lg shadow-inner cursor-pointer"
                 onClick={() => toggleExpandedPost(post.id)}
               >
-                <h3 className="text-lg font-semibold text-gray-600">{post.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400">Started by {post.user} - {post.replies} replies</p>
+                <h3 className="text-lg font-semibold text-gray-600">
+                  {post.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Started by {post.user} - {post.replies} replies
+                </p>
                 {expandedPost === post.id && (
-                  <p className="text-gray-600 dark:text-gray-800 mt-2">{post.details}</p>
+                  <p className="text-gray-600 dark:text-gray-800 mt-2">
+                    {post.details}
+                  </p>
                 )}
               </div>
             ))}
             <button
               className="self-end text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-600"
-              onClick={() => navigate('/community-forum')}
+              onClick={() => navigate("/community-forum")}
             >
               View All Discussions
             </button>
