@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import PrivateRoute from './components/PrivateRoute';  // Component for protected routes
 import './styles/global.css';
 import GardeningTips from './components/GardeningTips'; // Import the Gardening Tips component
+import Home from './pages/Home';
 
 const App = () => {
   return (
@@ -17,8 +18,9 @@ const App = () => {
         {/* Define your routes */}
         <Routes>
           {/* Public routes */}
-          <Route path="/ar" element={<ARPage />} /> {/* AR Page */}
           <Route path="/" element={<AboutPage />} /> {/* About Page */}
+          <Route path="/ar" element={<ARPage />} /> {/* AR Page */}
+          <Route path="/home" element={<Home />} /> 
           <Route path="/health-wellness" element={<HealthWellness />} />
           <Route path="/gardening-tips" element={<GardeningTips />} /> {/* Gardening Tips route */}
 
