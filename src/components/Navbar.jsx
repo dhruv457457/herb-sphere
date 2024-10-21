@@ -31,6 +31,18 @@ function Navbar({ handleShowBookmarks }) {
           >
             Health
           </Link>
+          <Link
+            to="/community"
+            className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
+          >
+            Community
+          </Link>
+          <Link
+            to="/dashboard"
+            className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
+          >
+            Dashboard
+          </Link>
         </div>
       </div>
     </nav>

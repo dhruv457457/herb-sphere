@@ -6,6 +6,7 @@ import FirstPage from "../components/FirstPage";
 import AyushCards from "../components/AyushCards";
 import Footer from "../components/Footer";
 import QuizPopup from "../components/QuizPopup";
+import MyHerbs from "../components/MyHerbs";
 
 // import Slider from "react-slick";
 
@@ -20,6 +21,8 @@ const Home = () => {
   const [selectedPlant, setSelectedPlant] = useState(null); // Selected plant for popup
   const [isFilterOpen, setIsFilterOpen] = useState(false); // State for filter panel
   const [isQuizOpen, setIsQuizOpen] = useState(false); // State for quiz popup
+  const [showChatbot, setShowChatbot] = useState(false); // State for chatbot visibility
+  const [bookmarkedPlants, setBookmarkedPlants] = useState([]); // State to hold bookmarked plants
 
   // Fetch plants data on component mount
   useEffect(() => {
@@ -73,7 +76,6 @@ const Home = () => {
   // Function to handle filter changes
   const handleRegionChange = (e) => setFilterRegion(e.target.value);
   const handleTypeChange = (e) => setFilterType(e.target.value);
-  const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
   // Function to toggle filter panel
   const toggleFilter = () => {
@@ -85,13 +87,38 @@ const Home = () => {
     setIsQuizOpen(!isQuizOpen);
   };
 
-  // Filtered plants based on selected filters
+  // Function to toggle chatbot visibility
+  const toggleChatbot = () => {
+    setShowChatbot(!showChatbot);
+  };
+
+  // Function to handle search input changes
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Filtered plants based on selected filters and search term
   const filteredPlants = plants.filter(
     (plant) =>
       (filterRegion === "All Regions" || plant.region === filterRegion) &&
       (filterType === "All Types" || plant.type === filterType) &&
-      plant.name.toLowerCase().includes(searchTerm.toLowerCase())
+      plant.name.toLowerCase().includes(searchTerm.toLowerCase()) // Search filter
   );
+
+  // Function to handle bookmarking a plant
+  const handleBookmark = (plant) => {
+    setBookmarkedPlants((prev) => {
+      if (prev.some((p) => p._id === plant._id)) {
+        return prev.filter((p) => p._id !== plant._id); // Remove if already bookmarked
+      }
+      return [...prev, plant]; // Add to bookmarks
+    });
+  };
+
+  // Function to remove a bookmark
+  const handleRemoveBookmark = (id) => {
+    setBookmarkedPlants((prev) => prev.filter((p) => p._id !== id));
+  };
 
   // Function to scroll to the PlantCards section
   const scrollToPlantCards = () => {
@@ -135,6 +162,18 @@ const Home = () => {
             >
               Health
             </Link>
+            <Link
+              to="/community"
+              className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
+            >
+              Community
+            </Link>
+            <Link
+              to="/dashboard"
+              className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
+            >
+              Dashboard
+            </Link>
           </div>
 
           {/* Right Side: Search Bar, Filter, Quiz, AR */}
@@ -171,9 +210,49 @@ const Home = () => {
           </div>
         </div>
       </nav>
-      
+
       {/* Render the Quiz Popup */}
       {isQuizOpen && <QuizPopup isOpen={isQuizOpen} onClose={toggleQuiz} />}
+
+      {/* Render the Chatbot Button and Iframe */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <button
+          onClick={toggleChatbot}
+          className={`bg-main-color text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center ${
+            showChatbot ? "hidden" : ""
+          }`}
+          style={{ width: "50px", height: "50px" }}
+        >
+          <span className="material-icons" style={{ fontSize: "28px" }}>
+            chat
+          </span>
+        </button>
+
+        {showChatbot && (
+          <div className="relative">
+            <iframe
+              width="350"
+              height="430"
+              allow="microphone;"
+              src="https://console.dialogflow.com/api-client/demo/embedded/501ea8ff-d991-47ee-90f1-faaa49b0963f"
+              className="border border-gray-300 rounded-lg shadow-lg"
+              style={{ zIndex: 9999 }}
+            ></iframe>
+            <button
+              onClick={toggleChatbot}
+              className="absolute top-2 right-2 bg-white text-black p-2 rounded-full shadow-lg hover:bg-gray-200 transition-colors duration-300"
+              style={{ zIndex: 10000 }}
+            >
+              <span
+                className="material-icons"
+                style={{ width: "20px", height: "5px" }}
+              >
+                close
+              </span>
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Filter Slider (Fixed with Transparency and Blur Effect) */}
       <div
@@ -231,17 +310,19 @@ const Home = () => {
 
       <FirstPage onGetStartedClick={scrollToPlantCards} />
 
-      <div className="min-h-screen px-8 py-10 shadow-lg">
+  
         {/* Plant Cards */}
+        <div className="min-h-screen px-8 py-10 ">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">
-          {plants.map((plant) => (
+          {filteredPlants.map((plant) => (
             <PlantCard
-              key={plant._id} // Use a unique key from the plant object
-              imageSrc={plant.imageSrc || "default-image-url"} // Ensure imageSrc is handled correctly
+              key={plant._id}
+              imageSrc={plant.imageSrc || "default-image-url"}
               name={plant.name || "Unknown Plant"}
               type={plant.type || "Unknown Type"}
-              onLearnMore={() => openPopup(plant)} // Trigger popup with selected plant data
-              className="bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl"
+              onLearnMore={() => openPopup(plant)}
+              onBookmark={() => handleBookmark(plant)} // Add onBookmark prop
+              isBookmarked={bookmarkedPlants.some((p) => p._id === plant._id)} // Check if plant is bookmarked
             />
           ))}
         </div>

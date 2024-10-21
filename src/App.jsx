@@ -11,6 +11,7 @@ import './styles/global.css';
 import GardeningTips from './components/GardeningTips'; // Import the Gardening Tips component
 import Home from './pages/Home';
 import CommunityForum from './components/Community';
+import MyHerbs from './components/MyHerbs';
 
 const App = () => {
   return (
@@ -24,18 +25,26 @@ const App = () => {
           <Route path="/home" element={<Home />} /> 
           <Route path="/health-wellness" element={<HealthWellness />} />
           <Route path="/gardening-tips" element={<GardeningTips />} /> 
-          <Route path="/community" element={<CommunityForum />} /> 
+          <Route path="/myherbs" element={<MyHerbs />} /> 
 
           {/* Authentication routes */}
           <Route path="/login" element={<Login />} />   {/* Login Page */}
           <Route path="/register" element={<Register />} />   {/* Register Page */}
 
-          {/* Protected route */}
+          {/* Protected routes */}
           <Route
-            path="/Dashboard"
+            path="/dashboard"
             element={
               <PrivateRoute>  {/* Only accessible if logged in */}
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/community"
+            element={
+              <PrivateRoute>  {/* Only accessible if logged in */}
+                <CommunityForum />
               </PrivateRoute>
             }
           />
