@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';  // Component for protecte
 import './styles/global.css';
 import GardeningTips from './components/GardeningTips'; // Import the Gardening Tips component
 import Home from './pages/Home';
+import CommunityForum from './components/Community';
 
 const App = () => {
   return (
@@ -22,7 +23,8 @@ const App = () => {
           <Route path="/ar" element={<ARPage />} /> {/* AR Page */}
           <Route path="/home" element={<Home />} /> 
           <Route path="/health-wellness" element={<HealthWellness />} />
-          <Route path="/gardening-tips" element={<GardeningTips />} /> {/* Gardening Tips route */}
+          <Route path="/gardening-tips" element={<GardeningTips />} /> 
+          <Route path="/community" element={<CommunityForum />} /> 
 
           {/* Authentication routes */}
           <Route path="/login" element={<Login />} />   {/* Login Page */}

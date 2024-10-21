@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PlantCard from "../components/PlantCard";
 import { fetchPlants } from "../services/api";
-import { Link } from 'react-router-dom';
-import FirstPage from "../components/FirstPage"; // Going into the 'components' folder
+import { Link } from "react-router-dom";
+import FirstPage from "../components/FirstPage";
 import AyushCards from "../components/AyushCards";
 import Footer from "../components/Footer";
+import QuizPopup from "../components/QuizPopup";
 
-// import Slider from "react-slick"; 
+// import Slider from "react-slick";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +19,7 @@ const Home = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false); // Popup open state
   const [selectedPlant, setSelectedPlant] = useState(null); // Selected plant for popup
   const [isFilterOpen, setIsFilterOpen] = useState(false); // State for filter panel
+  const [isQuizOpen, setIsQuizOpen] = useState(false); // State for quiz popup
 
   // Fetch plants data on component mount
   useEffect(() => {
@@ -91,11 +93,6 @@ const Home = () => {
       plant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Toggle between displaying bookmarks and plant cards
-  const handleShowBookmarks = () => {
-    setShowBookmarks(!showBookmarks);
-  };
-
   // Function to scroll to the PlantCards section
   const scrollToPlantCards = () => {
     if (plantCardsRef.current) {
@@ -133,23 +130,11 @@ const Home = () => {
               Login
             </Link>
             <Link
-              to="/register"
-              className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
-            >
-              Register
-            </Link>
-            <Link
               to="/health-wellness"
               className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
             >
               Health
             </Link>
-            <button
-              onClick={handleShowBookmarks}
-              className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
-            >
-              Bookmarks
-            </button>
           </div>
 
           {/* Right Side: Search Bar, Filter, Quiz, AR */}
@@ -178,7 +163,7 @@ const Home = () => {
 
             {/* Quiz Button */}
             <button
-              onClick={toggleQuiz}
+              onClick={toggleQuiz} // Toggle quiz popup on button click
               className="px-4 py-2 border border-main-color text-main-color rounded-xl bg-sec-color hover:bg-main-color hover:text-white transition-colors duration-200"
             >
               <i className="fa-solid fa-question-circle mr-2"></i>Quiz
@@ -186,11 +171,15 @@ const Home = () => {
           </div>
         </div>
       </nav>
+      
+      {/* Render the Quiz Popup */}
+      {isQuizOpen && <QuizPopup isOpen={isQuizOpen} onClose={toggleQuiz} />}
 
       {/* Filter Slider (Fixed with Transparency and Blur Effect) */}
       <div
-        className={`fixed top-16 z-20 left-0 w-full bg-white bg-opacity-80 backdrop-blur-md shadow-lg transform transition-transform duration-300 ease-in-out ${isFilterOpen ? "translate-y-0" : "-translate-y-full"
-          }`}
+        className={`fixed top-16 z-20 left-0 w-full bg-white bg-opacity-80 backdrop-blur-md shadow-lg transform transition-transform duration-300 ease-in-out ${
+          isFilterOpen ? "translate-y-0" : "-translate-y-full"
+        }`}
       >
         <div className="flex flex-wrap px-8 py-4">
           {/* Filter by Region */}
@@ -287,7 +276,8 @@ const Home = () => {
                     {selectedPlant.multimedia.length > 0 ? (
                       selectedPlant.multimedia.map((media, index) => (
                         <div key={index} className="inline-block mr-4">
-                          {media.includes("youtube.com") || media.includes("youtu.be") ? (
+                          {media.includes("youtube.com") ||
+                          media.includes("youtu.be") ? (
                             <iframe
                               className="h-64 w-64 rounded-lg shadow-md"
                               src={media}
@@ -320,16 +310,35 @@ const Home = () => {
 
                 {/* Right side: Plant Info and Details */}
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">{selectedPlant.name}</h2>
-                  <p className="text-lg leading-6 text-gray-600 mb-4">{selectedPlant.description}</p>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    {selectedPlant.name}
+                  </h2>
+                  <p className="text-lg leading-6 text-gray-600 mb-4">
+                    {selectedPlant.description}
+                  </p>
                   <div className="mb-4 text-gray-700">
-                    <p><strong>Region:</strong> {selectedPlant.region}</p>
-                    <p><strong>Type:</strong> {selectedPlant.type}</p>
-                    <p><strong>Habitat:</strong> {selectedPlant.habitat}</p>
-                    <p><strong>Botanical Name:</strong> {selectedPlant.botname}</p>
-                    <p><strong>Common Names:</strong> {selectedPlant.comnames}</p>
-                    <p><strong>Medicinal Uses:</strong> {selectedPlant.meduses}</p>
-                    <p><strong>Methods of Cultivation:</strong> {selectedPlant.methofcul}</p>
+                    <p>
+                      <strong>Region:</strong> {selectedPlant.region}
+                    </p>
+                    <p>
+                      <strong>Type:</strong> {selectedPlant.type}
+                    </p>
+                    <p>
+                      <strong>Habitat:</strong> {selectedPlant.habitat}
+                    </p>
+                    <p>
+                      <strong>Botanical Name:</strong> {selectedPlant.botname}
+                    </p>
+                    <p>
+                      <strong>Common Names:</strong> {selectedPlant.comnames}
+                    </p>
+                    <p>
+                      <strong>Medicinal Uses:</strong> {selectedPlant.meduses}
+                    </p>
+                    <p>
+                      <strong>Methods of Cultivation:</strong>{" "}
+                      {selectedPlant.methofcul}
+                    </p>
                   </div>
 
                   {/* Audio Player */}
@@ -374,8 +383,6 @@ const Home = () => {
         )}
       </div>
       <AyushCards />
-
-      
 
       <Footer />
     </div>

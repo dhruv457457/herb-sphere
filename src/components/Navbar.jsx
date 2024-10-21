@@ -1,6 +1,6 @@
 // Navbar.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 function Navbar({ handleShowBookmarks }) {
   return (
@@ -13,26 +13,28 @@ function Navbar({ handleShowBookmarks }) {
 
         {/* Middle: Links */}
         <div className="flex-grow flex justify-center space-x-8">
-          <Link to="/" className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200">
+          <Link
+            to="/"
+            className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
+          >
             Home
           </Link>
-          <Link to="/login" className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200">
+          <Link
+            to="/login"
+            className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
+          >
             Login
           </Link>
-          <Link to="/register" className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200">
-            Register
-          </Link>
-          <Link to="/health-wellness" className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200">
+          <Link
+            to="/health-wellness"
+            className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200"
+          >
             Health
-          </Link>
-          <Link to="/bookmarks" className="pb-1 text-navbar-text border-b-2 border-transparent hover:border-sub-color hover:text-sub-color transition-colors duration-200">
-            Bookmark
           </Link>
         </div>
       </div>
     </nav>
   );
 }
-
 
 export default Navbar;

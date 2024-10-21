@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { auth } from '../services/firebase'; // Import Firebase auth
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,10 +40,21 @@ const Login = () => {
             className="w-full p-2 border border-green-300 rounded mt-4 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
-          <button type="submit" className="w-full mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700 transition duration-200">
+          <button
+            type="submit"
+            className="w-full mt-4 bg-green-600 text-white p-2 rounded hover:bg-green-700 transition duration-200"
+          >
             Login
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <p className="text-gray-600">
+            Not a user?{' '}
+            <Link to="/register" className="text-green-600 font-bold hover:underline">
+              Register
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

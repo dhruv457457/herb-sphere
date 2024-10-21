@@ -15,23 +15,21 @@ import {
   FaChevronRight,
   FaHome,
 } from "react-icons/fa";
-import { Line, Doughnut } from "react-chartjs-2";
 import "react-toastify/dist/ReactToastify.css";
-import Chart from "chart.js/auto";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState("User");
+  const [userEmail, setUserEmail] = useState("User");
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [progress, setProgress] = useState(60);
   const [expandedPost, setExpandedPost] = useState(null);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      setUserName(currentUser.displayName || "User");
+      const email = currentUser.email.split('@')[0]; // Extract the part before '@'
+      setUserEmail(email);
     }
   }, []);
 
@@ -52,10 +50,10 @@ const Dashboard = () => {
         navigate("/");
         break;
       case "Gardening Tips":
-        navigate("/health-wellness");
+        navigate("/gardening-tips");
         break;
       case "Community Forum":
-        navigate("/community-forum");
+        navigate("/community");
         break;
       default:
         break;
@@ -78,32 +76,6 @@ const Dashboard = () => {
     );
   };
 
-  const lineChartData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        label: "Herb Growth Over Months",
-        data: [12, 19, 7, 15, 22, 30],
-        fill: false,
-        backgroundColor: "rgba(75,192,192,0.6)",
-        borderColor: "rgba(75,192,192,1)",
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const progressData = {
-    labels: ["Completed", "Remaining"],
-    datasets: [
-      {
-        label: "Goal Progress",
-        data: [progress, 100 - progress],
-        backgroundColor: ["#34D399", "#D1D5DB"],
-        hoverOffset: 4,
-      },
-    ],
-  };
-
   return (
     <div
       className={`flex min-h-screen transition-colors duration-700 ${
@@ -111,9 +83,8 @@ const Dashboard = () => {
       }`}
     >
       <div
-        className={`fixed inset-y-0 left-0 ${
-          sidebarCollapsed ? "w-20" : "w-64"
-        } bg-gradient-to-t from-green-900 to-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md bg-opacity-30`}
+        className={`fixed inset-y-0 left-0 ${sidebarCollapsed ? "w-20" : "w-64"
+          } bg-gradient-to-t from-green-900 to-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md bg-opacity-30`}
       >
         <div>
           <div className="flex items-center justify-between">
@@ -173,17 +144,8 @@ const Dashboard = () => {
       <main className="flex-1 p-6 ml-20 sm:ml-64 bg-sec-color">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-main-color">
-            Welcome, {userName}!
+            Welcome, {userEmail}!
           </h1>
-          <div>
-            <i class="fa-solid fa-address-card text-3xl text-main-color"></i>
-            <Link
-              to="/gardening-tips"
-              className="text-green-700 hover:text-green-900"
-            >
-              Go to Gardening Tips
-            </Link>
-          </div>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -222,47 +184,6 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-
-        <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-main-color">
-            Your Progress
-          </h2>
-          <div className="flex justify-center">
-            <div style={{ width: "300px", height: "300px" }}>
-              <Doughnut
-                data={progressData}
-                options={{
-                  responsive: true,
-                  animation: { animateScale: true },
-                }}
-              />
-            </div>
-          </div>
-          <p className="mt-4 text-center text-main-color">
-            {progress}% of your weekly goal achieved!
-          </p>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={progress}
-            onChange={(e) => setProgress(Number(e.target.value))}
-            className="mt-4 w-full"
-          />
-        </section>
-
-        <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-main-color">
-            Interactive Statistics
-          </h2>
-          <Line
-            data={lineChartData}
-            options={{
-              responsive: true,
-              animation: { duration: 2000, easing: "easeInOutQuad" },
-            }}
-          />
-        </section>
 
         <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-4 text-main-color">
@@ -305,7 +226,7 @@ const Dashboard = () => {
             ))}
             <button
               className="self-end text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-600"
-              onClick={() => navigate("/community-forum")}
+              onClick={() => navigate("/community")}
             >
               View All Discussions
             </button>

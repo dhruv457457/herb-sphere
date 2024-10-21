@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"; // Import Auth SDK
 import { getDatabase } from "firebase/database"; // Import Realtime Database SDK
+import { getFirestore } from "firebase/firestore"; // Import Firestore SDK
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,6 +22,7 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase services
 const auth = getAuth(app); // Initialize Firebase Authentication
 const database = getDatabase(app); // Initialize Firebase Realtime Database
+const firestore = getFirestore(app); // Initialize Firestore
 
 // Export Firebase services
-export { app, auth, database }; // Include app export if needed
+export { app, auth, database, firestore }; // Export firestore as well
