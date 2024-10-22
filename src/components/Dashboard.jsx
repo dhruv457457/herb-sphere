@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { auth } from "../services/firebase";
+import { auth } from "../services/firebase"; // Ensure to import auth from your Firebase setup
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,15 +8,11 @@ import {
   FaSearch,
   FaSeedling,
   FaComments,
-  FaBell,
-  FaUserCircle,
-  FaMoon,
-  FaSun,
-  FaChevronRight,
   FaHome,
 } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
+import { firestore } from "../services/firebase"; // Import Firestore
+import { collection, query, orderBy, limit, getDocs } from "firebase/firestore"; // Firestore functions
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -24,6 +20,7 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [expandedPost, setExpandedPost] = useState(null);
+  const [communityPosts, setCommunityPosts] = useState([]); // State to hold community posts
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -31,7 +28,21 @@ const Dashboard = () => {
       const email = currentUser.email.split('@')[0]; // Extract the part before '@'
       setUserEmail(email);
     }
+    fetchCommunityPosts(); // Fetch posts on component mount
   }, []);
+
+  const fetchCommunityPosts = async () => {
+    const postsRef = collection(firestore, "posts"); // Use the correct Firestore collection
+    const q = query(postsRef, orderBy("createdAt", "desc"), limit(3)); // Adjust to your timestamp field and desired limit
+    try {
+      const querySnapshot = await getDocs(q);
+      const posts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setCommunityPosts(posts); // Set the fetched posts to state
+    } catch (error) {
+      console.error("Error fetching posts: ", error);
+      toast.error("Failed to fetch community posts");
+    }
+  };
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -100,21 +111,9 @@ const Dashboard = () => {
             {[
               { label: "Home", icon: <FaHome />, action: "Home" },
               { label: "My Herbs", icon: <FaLeaf />, action: "View My Herbs" },
-              {
-                label: "Explore Herbs",
-                icon: <FaSearch />,
-                action: "Explore New Herbs",
-              },
-              {
-                label: "Gardening Tips",
-                icon: <FaSeedling />,
-                action: "Gardening Tips",
-              },
-              {
-                label: "Community Forum",
-                icon: <FaComments />,
-                action: "Community Forum",
-              },
+              { label: "Explore Herbs", icon: <FaSearch />, action: "Explore New Herbs" },
+              { label: "Gardening Tips", icon: <FaSeedling />, action: "Gardening Tips" },
+              { label: "Community Forum", icon: <FaComments />, action: "Community Forum" },
             ].map((item, idx) => (
               <button
                 key={idx}
@@ -122,11 +121,7 @@ const Dashboard = () => {
                 className="flex items-center space-x-3 hover:bg-sub-color hover:bg-opacity-60 p-2 rounded-lg transition-all duration-300"
               >
                 <span className="text-xl">{item.icon}</span>
-                <span
-                  className={`text-lg ${sidebarCollapsed ? "hidden" : "block"}`}
-                >
-                  {item.label}
-                </span>
+                <span className={`text-lg ${sidebarCollapsed ? "hidden" : "block"}`}>{item.label}</span>
               </button>
             ))}
           </nav>
@@ -143,33 +138,15 @@ const Dashboard = () => {
 
       <main className="flex-1 p-6 ml-20 sm:ml-64 bg-sec-color">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-main-color">
-            Welcome, {userEmail}!
-          </h1>
+          <h1 className="text-3xl font-bold text-main-color">Welcome, {userEmail}!</h1>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            {
-              title: "View My Herbs",
-              icon: <FaLeaf />,
-              desc: "Check out your saved herbs and their details.",
-            },
-            {
-              title: "Explore New Herbs",
-              icon: <FaSearch />,
-              desc: "Discover new herbs and their benefits.",
-            },
-            {
-              title: "Gardening Tips",
-              icon: <FaSeedling />,
-              desc: "Learn tips and tricks for herb gardening.",
-            },
-            {
-              title: "Community Forum",
-              icon: <FaComments />,
-              desc: "Join discussions with fellow herb enthusiasts.",
-            },
+            { title: "View My Herbs", icon: <FaLeaf />, desc: "Check out your saved herbs and their details." },
+            { title: "Explore New Herbs", icon: <FaSearch />, desc: "Discover new herbs and their benefits." },
+            { title: "Gardening Tips", icon: <FaSeedling />, desc: "Learn tips and tricks for herb gardening." },
+            { title: "Community Forum", icon: <FaComments />, desc: "Join discussions with fellow herb enthusiasts." },
           ].map((card, idx) => (
             <div
               key={idx}
@@ -177,55 +154,36 @@ const Dashboard = () => {
               className="bg-green-200 bg-opacity-80 backdrop-blur-lg p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-transform transform hover:scale-105 hover:bg-opacity-100"
             >
               <div className="text-5xl mb-4 text-green-900">{card.icon}</div>
-              <h3 className="text-xl font-semibold mb-2 text-main-color">
-                {card.title}
-              </h3>
+              <h3 className="text-xl font-semibold mb-2 text-main-color">{card.title}</h3>
               <p className="text-gray-500">{card.desc}</p>
             </div>
           ))}
         </div>
 
         <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-main-color">
-            Community Forum
-          </h2>
+          <h2 className="text-2xl font-bold mb-4 text-main-color">Community Forum</h2>
           <div className="flex flex-col space-y-4">
-            {[
-              {
-                id: 1,
-                title: "How to grow basil indoors?",
-                user: "JohnDoe",
-                replies: 5,
-                details: "Basil is an herb that loves warmth and sunlight...",
-              },
-              {
-                id: 2,
-                title: "Best soil for herb gardens?",
-                user: "GreenThumb",
-                replies: 3,
-                details: "For herb gardening, well-drained soil is crucial...",
-              },
-            ].map((post) => (
-              <div
-                key={post.id}
-                className="p-4 bg-white rounded-lg shadow-inner cursor-pointer"
-                onClick={() => toggleExpandedPost(post.id)}
-              >
-                <h3 className="text-lg font-semibold text-gray-600">
-                  {post.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Started by {post.user} - {post.replies} replies
-                </p>
-                {expandedPost === post.id && (
-                  <p className="text-gray-600 dark:text-gray-800 mt-2">
-                    {post.details}
+            {communityPosts.length > 0 ? (
+              communityPosts.map((post) => (
+                <div
+                  key={post.id}
+                  className="p-4 bg-white rounded-lg shadow-inner cursor-pointer"
+                  onClick={() => toggleExpandedPost(post.id)}
+                >
+                  <h3 className="text-lg font-semibold text-gray-600">{post.content}</h3>
+                  <p className="text-gray-600">
+                    Started by {post.userName} - {post.replies.length} replies
                   </p>
-                )}
-              </div>
-            ))}
+                  {expandedPost === post.id && (
+                    <p className="text-gray-600 mt-2">{post.replies.map(reply => reply.replyContent).join(", ")}</p>
+                  )}
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-600">No posts available.</p>
+            )}
             <button
-              className="self-end text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-600"
+              className="self-end text-green-600 hover:text-green-800"
               onClick={() => navigate("/community")}
             >
               View All Discussions

@@ -310,10 +310,9 @@ const Home = () => {
 
       <FirstPage onGetStartedClick={scrollToPlantCards} />
 
-  
-        {/* Plant Cards */}
-        <div className="min-h-screen px-8 py-10 ">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">
+      {/* Plant Cards */}
+      <div className="min-h-screen px-8 py-10 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4 overflow-hidden text-ellipsis whitespace-nowrap">
           {filteredPlants.map((plant) => (
             <PlantCard
               key={plant._id}
@@ -388,38 +387,44 @@ const Home = () => {
                     )}
                   </div>
                 </div>
-
                 {/* Right side: Plant Info and Details */}
                 <div>
                   <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     {selectedPlant.name}
                   </h2>
-                  <p className="text-lg leading-6 text-gray-600 mb-4">
-                    {selectedPlant.description}
-                  </p>
-                  <div className="mb-4 text-gray-700">
-                    <p>
-                      <strong>Region:</strong> {selectedPlant.region}
+
+                  {/* Scrollable Text Information Section */}
+                  <div className="overflow-y-auto max-h-52 mb-4 pr-4">
+                    <p className="text-lg leading-6 text-gray-600 mb-4">
+                      {selectedPlant.description}
                     </p>
-                    <p>
-                      <strong>Type:</strong> {selectedPlant.type}
-                    </p>
-                    <p>
-                      <strong>Habitat:</strong> {selectedPlant.habitat}
-                    </p>
-                    <p>
-                      <strong>Botanical Name:</strong> {selectedPlant.botname}
-                    </p>
-                    <p>
-                      <strong>Common Names:</strong> {selectedPlant.comnames}
-                    </p>
-                    <p>
-                      <strong>Medicinal Uses:</strong> {selectedPlant.meduses}
-                    </p>
-                    <p>
-                      <strong>Methods of Cultivation:</strong>{" "}
-                      {selectedPlant.methofcul}
-                    </p>
+                    <div className="mb-4 text-gray-700">
+                      <p>
+                        <strong>Region:</strong> {selectedPlant.region}
+                      </p>
+                      <p>
+                        <strong>Type:</strong> {selectedPlant.type}
+                      </p>
+                      <p>
+                        <strong>Habitat:</strong> {selectedPlant.habitat}
+                      </p>
+                      <p>
+                        <strong>Botanical Name:</strong>{" "}
+                        {selectedPlant.botanicalName}
+                      </p>
+                      <p>
+                        <strong>Common Names:</strong>{" "}
+                        {selectedPlant.commonNames}
+                      </p>
+                      <p>
+                        <strong>Medicinal Uses:</strong>{" "}
+                        {selectedPlant.medicinalUses}
+                      </p>
+                      <p>
+                        <strong>Methods of Cultivation:</strong>{" "}
+                        {selectedPlant.methodsOfCultivation}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Audio Player */}
