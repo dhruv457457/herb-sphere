@@ -89,7 +89,7 @@ const Dashboard = () => {
         navigate("/");
         break;
       case "View My Herbs":
-        navigate("/my-herbs");
+        navigate("/myherbs");
         break;
       case "Explore New Herbs":
         navigate("/");
@@ -130,7 +130,7 @@ const Dashboard = () => {
       <div
         className={`fixed inset-y-0 left-0 ${
           sidebarCollapsed ? "w-20" : "w-64"
-        } bg-gradient-to-t from-green-900 to-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md bg-opacity-30`}
+        } bg-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md `}
       >
         <div>
           <div className="flex items-center justify-between">

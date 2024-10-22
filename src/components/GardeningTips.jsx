@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "./Navbar";
 
 const gardeningTips = [
   {
@@ -20,6 +21,35 @@ const gardeningTips = [
     image:
       "https://ideogram.ai/assets/image/lossless/response/YvtKd_jpSG24V4a99hJdcQ",
   },
+  {
+    id: 3,
+    title: "Fertilizing Frequency",
+    description:
+      "Fertilize every 4-6 weeks during the growing season to maintain soil health.",
+    details:
+      "Use a balanced fertilizer or organic alternatives like compost tea. Make sure to follow instructions to avoid over-fertilization.",
+    image:
+      " https://ideogram.ai/assets/progressive-image/balanced/response/74s8lfR3TpW1z1pVkCF6gQ",
+  },
+  {
+    id: 4,
+    title: "Pest Control",
+    description: "Protect your plants from pests with natural remedies.",
+    details:
+      "Use neem oil, garlic spray, or companion planting to deter pests without harming beneficial insects.",
+    image:
+      "https://ideogram.ai/assets/image/lossless/response/YvtKd_jpSG24V4a99hJdcQ",
+  },
+  {
+    id: 5,
+    title: "Sunlight Management",
+    description:
+      "Ensure your plants receive the appropriate amount of sunlight.",
+    details:
+      "Most vegetables need at least 6 hours of direct sunlight per day. Consider growing shade-tolerant plants in low-light areas.",
+    image:
+      "https://ideogram.ai/assets/image/lossless/response/YvtKd_jpSG24V4a99hJdcQ",
+  },
   // ...additional tips
 ];
 
@@ -36,6 +66,20 @@ const recommendedTools = [
     image:
       "https://ideogram.ai/assets/image/lossless/response/RAjtwyNZSHOdlUOuiSS90A",
   },
+  {
+    name: "Garden Trowel",
+    description:
+      "A versatile hand tool for digging small holes, transplanting, and planting seeds.",
+    image:
+      "https://ideogram.ai/assets/image/lossless/response/RAjtwyNZSHOdlUOuiSS90A",
+  },
+  {
+    name: "Soil pH Meter",
+    description:
+      "A tool to measure the acidity or alkalinity of your soil, helping maintain plant health.",
+    image:
+      "https://ideogram.ai/assets/image/lossless/response/RAjtwyNZSHOdlUOuiSS90A",
+  },
   // ...additional tools
 ];
 
@@ -48,6 +92,7 @@ const GardeningTips = () => {
 
   return (
     <div className="min-h-screen bg-white p-8">
+      <Navbar />
       {/* Header Section */}
       <header className="flex flex-col md:flex-row items-center mb-12 p-8 bg-green-100 rounded-lg">
         <div className="md:w-1/2 p-4">
@@ -147,7 +192,51 @@ const GardeningTips = () => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"
               allowfullscreen
-               className="rounded-lg shadow-lg"
+              className="rounded-lg shadow-lg mb-7"
+            ></iframe>
+            <iframe
+              width="100%"
+              height="250"
+              src="https://www.youtube.com/embed/BO8yuSTc3fo?si=-9kcleW7ZN0xyuWc"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              className="rounded-lg shadow-lg mb-7"
+            ></iframe>
+            <iframe
+              width="100%"
+              height="250"
+              src="https://www.youtube.com/embed/B0DrWAUsNSc?si=nJHzM10gEqfYUXSk"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              className="rounded-lg shadow-lg mb-7"
+            ></iframe>
+            <iframe
+              width="100%"
+              height="250"
+              src="https://www.youtube.com/embed/e4Tk-kcOmUA?si=bPa82t_Tv2oDx9Ss"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              className="rounded-lg shadow-lg mb-7"
+            ></iframe>
+            <iframe
+              width="100%"
+              height="250"
+              src="https://www.youtube.com/embed/XZhDdE434_o?si=hMusH07tSxrb1hdc"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              className="rounded-lg shadow-lg"
             ></iframe>
           </div>
         </div>

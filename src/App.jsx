@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ARPage from './pages/ARPage';  // Import the AR page
-import AboutPage from './pages/About';
 import HealthWellness from './components/HealthWellness';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -13,6 +12,8 @@ import Home from './pages/Home';
 import CommunityForum from './components/Community';
 import MyHerbs from './components/MyHerbs';
 
+
+
 const App = () => {
   return (
     <Router>
@@ -20,13 +21,12 @@ const App = () => {
         {/* Define your routes */}
         <Routes>
           {/* Public routes */}
-          <Route path="/" element={<AboutPage />} /> {/* About Page */}
+          <Route path="/" element={<Home />} /> {/* About Page */}
           <Route path="/ar" element={<ARPage />} /> {/* AR Page */}
-          <Route path="/home" element={<Home />} /> 
           <Route path="/health-wellness" element={<HealthWellness />} />
           <Route path="/gardening-tips" element={<GardeningTips />} /> 
           <Route path="/myherbs" element={<MyHerbs />} /> 
-
+        
           {/* Authentication routes */}
           <Route path="/login" element={<Login />} />   {/* Login Page */}
           <Route path="/register" element={<Register />} />   {/* Register Page */}
