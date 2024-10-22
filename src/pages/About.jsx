@@ -457,10 +457,12 @@ const Home = () => {
                       <i className="fa-solid fa-share mr-2"></i>
                       Share
                     </button>
-                    <button className="text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors duration-200">
-                      <i className="fa-regular fa-comment mr-2"></i>
-                      Comment
-                    </button>
+                    <Link to="/community" className="pb-1">
+                      <button className="text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors duration-200">
+                        <i className="fa-regular fa-comment mr-2"></i>
+                        Comment
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>

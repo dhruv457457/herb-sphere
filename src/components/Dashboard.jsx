@@ -13,6 +13,7 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 import { firestore } from "../services/firebase"; // Import Firestore
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore"; // Firestore functions
+import axios from "axios"; // Import Axios for API calls
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -21,14 +22,20 @@ const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [expandedPost, setExpandedPost] = useState(null);
   const [communityPosts, setCommunityPosts] = useState([]); // State to hold community posts
+  const [newsArticles, setNewsArticles] = useState([]); // State to hold news articles
+  const [loadingNews, setLoadingNews] = useState(true); // Loading state for news
+  const [errorNews, setErrorNews] = useState(null); // Error state for news
+
+  const apiKey = "58bc5f44b1b04122864e443678d1b781"; // Replace with your Google News API Key
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      const email = currentUser.email.split('@')[0]; // Extract the part before '@'
+      const email = currentUser.email.split("@")[0]; // Extract the part before '@'
       setUserEmail(email);
     }
     fetchCommunityPosts(); // Fetch posts on component mount
+    fetchNewsArticles(); // Fetch news articles on component mount
   }, []);
 
   const fetchCommunityPosts = async () => {
@@ -36,11 +43,35 @@ const Dashboard = () => {
     const q = query(postsRef, orderBy("createdAt", "desc"), limit(3)); // Adjust to your timestamp field and desired limit
     try {
       const querySnapshot = await getDocs(q);
-      const posts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const posts = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       setCommunityPosts(posts); // Set the fetched posts to state
     } catch (error) {
       console.error("Error fetching posts: ", error);
       toast.error("Failed to fetch community posts");
+    }
+  };
+
+  // Function to fetch news articles
+  const fetchNewsArticles = async () => {
+    setLoadingNews(true);
+    setErrorNews(null); // Reset error state
+    try {
+      const response = await axios.get(
+        `https://newsapi.org/v2/everything?q=ayurveda OR herb&apiKey=${apiKey}&pageSize=5` // Updated query for filtering
+      );
+      if (response.data.articles) {
+        setNewsArticles(response.data.articles); // Set the filtered articles to state
+      } else {
+        setErrorNews("No news articles found.");
+      }
+    } catch (error) {
+      console.error("Error fetching news articles:", error);
+      setErrorNews("Failed to fetch news articles. Please try again later.");
+    } finally {
+      setLoadingNews(false);
     }
   };
 
@@ -54,6 +85,9 @@ const Dashboard = () => {
 
   const handleCardClick = (action) => {
     switch (action) {
+      case "Home":
+        navigate("/");
+        break;
       case "View My Herbs":
         navigate("/my-herbs");
         break;
@@ -94,8 +128,9 @@ const Dashboard = () => {
       }`}
     >
       <div
-        className={`fixed inset-y-0 left-0 ${sidebarCollapsed ? "w-20" : "w-64"
-          } bg-gradient-to-t from-green-900 to-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md bg-opacity-30`}
+        className={`fixed inset-y-0 left-0 ${
+          sidebarCollapsed ? "w-20" : "w-64"
+        } bg-gradient-to-t from-green-900 to-green-900 text-white transition-all duration-500 p-4 shadow-lg flex flex-col justify-between backdrop-blur-md bg-opacity-30`}
       >
         <div>
           <div className="flex items-center justify-between">
@@ -111,9 +146,21 @@ const Dashboard = () => {
             {[
               { label: "Home", icon: <FaHome />, action: "Home" },
               { label: "My Herbs", icon: <FaLeaf />, action: "View My Herbs" },
-              { label: "Explore Herbs", icon: <FaSearch />, action: "Explore New Herbs" },
-              { label: "Gardening Tips", icon: <FaSeedling />, action: "Gardening Tips" },
-              { label: "Community Forum", icon: <FaComments />, action: "Community Forum" },
+              {
+                label: "Explore Herbs",
+                icon: <FaSearch />,
+                action: "Explore New Herbs",
+              },
+              {
+                label: "Gardening Tips",
+                icon: <FaSeedling />,
+                action: "Gardening Tips",
+              },
+              {
+                label: "Community Forum",
+                icon: <FaComments />,
+                action: "Community Forum",
+              },
             ].map((item, idx) => (
               <button
                 key={idx}
@@ -121,7 +168,11 @@ const Dashboard = () => {
                 className="flex items-center space-x-3 hover:bg-sub-color hover:bg-opacity-60 p-2 rounded-lg transition-all duration-300"
               >
                 <span className="text-xl">{item.icon}</span>
-                <span className={`text-lg ${sidebarCollapsed ? "hidden" : "block"}`}>{item.label}</span>
+                <span
+                  className={`text-lg ${sidebarCollapsed ? "hidden" : "block"}`}
+                >
+                  {item.label}
+                </span>
               </button>
             ))}
           </nav>
@@ -138,15 +189,33 @@ const Dashboard = () => {
 
       <main className="flex-1 p-6 ml-20 sm:ml-64 bg-sec-color">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-main-color">Welcome, {userEmail}!</h1>
+          <h1 className="text-3xl font-bold text-main-color">
+            Welcome, {userEmail}!
+          </h1>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { title: "View My Herbs", icon: <FaLeaf />, desc: "Check out your saved herbs and their details." },
-            { title: "Explore New Herbs", icon: <FaSearch />, desc: "Discover new herbs and their benefits." },
-            { title: "Gardening Tips", icon: <FaSeedling />, desc: "Learn tips and tricks for herb gardening." },
-            { title: "Community Forum", icon: <FaComments />, desc: "Join discussions with fellow herb enthusiasts." },
+            {
+              title: "View My Herbs",
+              icon: <FaLeaf />,
+              desc: "Check out your saved herbs and their details.",
+            },
+            {
+              title: "Explore New Herbs",
+              icon: <FaSearch />,
+              desc: "Discover new herbs and their benefits.",
+            },
+            {
+              title: "Gardening Tips",
+              icon: <FaSeedling />,
+              desc: "Learn tips and tricks for herb gardening.",
+            },
+            {
+              title: "Community Forum",
+              icon: <FaComments />,
+              desc: "Join discussions with fellow herb enthusiasts.",
+            },
           ].map((card, idx) => (
             <div
               key={idx}
@@ -154,14 +223,18 @@ const Dashboard = () => {
               className="bg-green-200 bg-opacity-80 backdrop-blur-lg p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-transform transform hover:scale-105 hover:bg-opacity-100"
             >
               <div className="text-5xl mb-4 text-green-900">{card.icon}</div>
-              <h3 className="text-xl font-semibold mb-2 text-main-color">{card.title}</h3>
+              <h3 className="text-xl font-semibold mb-2 text-main-color">
+                {card.title}
+              </h3>
               <p className="text-gray-500">{card.desc}</p>
             </div>
           ))}
         </div>
 
         <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4 text-main-color">Community Forum</h2>
+          <h2 className="text-2xl font-bold mb-4 text-main-color">
+            Community Forum
+          </h2>
           <div className="flex flex-col space-y-4">
             {communityPosts.length > 0 ? (
               communityPosts.map((post) => (
@@ -170,12 +243,18 @@ const Dashboard = () => {
                   className="p-4 bg-white rounded-lg shadow-inner cursor-pointer"
                   onClick={() => toggleExpandedPost(post.id)}
                 >
-                  <h3 className="text-lg font-semibold text-gray-600">{post.content}</h3>
+                  <h3 className="text-lg font-semibold text-gray-600">
+                    {post.content}
+                  </h3>
                   <p className="text-gray-600">
                     Started by {post.userName} - {post.replies.length} replies
                   </p>
                   {expandedPost === post.id && (
-                    <p className="text-gray-600 mt-2">{post.replies.map(reply => reply.replyContent).join(", ")}</p>
+                    <p className="text-gray-600 mt-2">
+                      {post.replies
+                        .map((reply) => reply.replyContent)
+                        .join(", ")}
+                    </p>
                   )}
                 </div>
               ))
@@ -189,6 +268,38 @@ const Dashboard = () => {
               View All Discussions
             </button>
           </div>
+        </section>
+
+        {/* News Articles Section */}
+        <section className="mt-12 bg-green-200 p-8 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-main-color">
+            Latest News
+          </h2>
+          {loadingNews ? (
+            <p>Loading news articles...</p>
+          ) : errorNews ? (
+            <p className="text-red-500">{errorNews}</p>
+          ) : newsArticles.length > 0 ? (
+            newsArticles.map((article, index) => (
+              <div
+                key={index}
+                className="mb-4 p-4 bg-white rounded-lg shadow-md"
+              >
+                <h3 className="font-semibold text-lg">{article.title}</h3>
+                <p className="text-gray-600">{article.description}</p>
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500"
+                >
+                  Read more
+                </a>
+              </div>
+            ))
+          ) : (
+            <p>No news articles available.</p>
+          )}
         </section>
 
         <ToastContainer />
